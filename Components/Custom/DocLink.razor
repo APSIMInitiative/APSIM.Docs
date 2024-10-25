@@ -1,0 +1,46 @@
+@using APSIM.Docs.Components.State
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc
+@inject StateContainer StateContainer
+@* @inject ProtectedSessionStorage _sessionStorage *@
+@inject NavigationManager NavigationManager
+
+
+@namespace Components.Custom
+
+<div class="col-3 g-2">
+    <div class="card card-hover-shadow" @onclick="GetDocString">
+        <NavLink class="nav-link" href="@DocLinkHref">
+            <img class="d-block mx-auto" src="Wheat.svg" alt="wheat image" width="25"/>
+            <div class="card-body">
+                <h5 class="card-title text-success">@DocModelName</h5>
+                <h6 class="class-subtitle text-black"> 
+                    @DocDescript
+                </h6>
+            </div>
+        </NavLink>  
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public string? DocModelName {get; set;}
+
+    [Parameter]
+    public string? DocDescript {get; set;}
+
+    [Parameter]
+    public string? DocLinkHref {get; set;}
+
+    public void GetDocString()
+    {
+        string dummyDocString = File.ReadAllText("wwwroot\\text 1.html");
+        StateContainer.ApsimDocString = dummyDocString;
+    }
+
+    
+
+
+
+
+} 

@@ -1,0 +1,81 @@
+@using APSIM.Documentation
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Mvc
+@using APSIM.Docs.Components.State
+@inject StateContainer StateContainer
+@rendermode InteractiveServer
+@* @inject ProtectedSessionStorage _sessionStorage *@
+
+@page "/doc/{filename}"
+
+<PageTitle>@Filename documentation</PageTitle>
+
+<HeadContent>
+    <style id="style">
+        @GetCssString()
+    </style>
+</HeadContent>
+
+@GetDocString()
+
+@code{
+    private string? filename;
+
+    private MarkupString? cssString;
+
+    [Parameter]
+    public MarkupString? docString { get; set; }
+
+    [Parameter]
+    public string? Filename
+    {
+        get { return filename; }
+        set { filename = value; }
+    }
+
+    protected override void OnInitialized()
+    {
+        MarkupString markupDocString = new(File.ReadAllText("wwwroot\\docs.css"));
+        cssString = markupDocString;
+    }
+
+    protected override void OnAfterRender(bool firstRenderer)
+    {
+        if (firstRenderer == true)
+        {
+            GetApsimDocString();
+            StateHasChanged();
+        }
+    }
+
+    public RenderFragment GetDocString()
+    {
+        RenderFragment renderFragment = @<div>@docString</div>;
+        return renderFragment;
+    }
+
+    private void SetCSS()
+    {
+        if (StateContainer.CssString != null)
+        {
+            MarkupString markupDocString = new(StateContainer.CssString);
+            cssString = markupDocString;
+        }        
+    }
+
+    public MarkupString? GetCssString()
+    {
+        return cssString;
+    }
+
+    private void GetApsimDocString()
+    {
+        if (StateContainer.ApsimDocString != null)
+        {
+            MarkupString markupDocString = new(StateContainer.ApsimDocString);
+            docString = markupDocString;
+        }
+    }
+
+}

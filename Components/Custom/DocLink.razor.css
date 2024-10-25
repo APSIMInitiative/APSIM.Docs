@@ -1,0 +1,7 @@
+.card-hover-shadow:hover{
+    border: 2px green solid;
+}
+
+.card-hover-shadow{
+    border: 2px white solid;
+}

@@ -1,0 +1,29 @@
+﻿@using APSIM.Documentation
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using Newtonsoft.Json
+@using Components.Layout
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@inject ProtectedSessionStorage _sessionStorage
+@page "/"
+
+<PageTitle>APSIM Docs</PageTitle>
+
+<h1>APSIM Documentation</h1>
+
+<DocLinks/>
+
+@code{
+    public async void GetDocString()
+    {
+        await StoreDocString(APSIM.Documentation.DocumentationUtilities.CreateHTML(""));
+    }
+
+    public async Task StoreDocString(string docString)
+    {
+        await _sessionStorage.SetAsync("docString", docString);
+    }
+
+
+
+}
