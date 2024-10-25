@@ -5,13 +5,17 @@ ARG TARGETARCH
 WORKDIR /source
 RUN echo ${TARGETARCH}
 
-# Copy project file and restore as distinct layers
-COPY --link APSIM.Docs.csproj .
-RUN dotnet restore -a $TARGETARCH
+# # Copy project file and restore as distinct layers
+# COPY --link APSIM.Docs.csproj .
+# RUN dotnet restore -a $TARGETARCH
 
 # Copy source code and publish app
-COPY --link . .
-RUN dotnet publish -a $TARGETARCH --no-restore -o /app
+RUN git clone https://github.com/APSIMInitiative/ApsimX.git
+
+RUN mkdir /app
+COPY . ./apsimdocs
+
+RUN dotnet publish -a $TARGETARCH -o /app
 
 
 # Runtime stage
