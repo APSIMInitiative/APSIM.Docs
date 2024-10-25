@@ -1,8 +1,8 @@
 @using APSIM.Docs.Components.State
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Mvc
+@using APSIM.Documentation.Models
 @inject StateContainer StateContainer
-@* @inject ProtectedSessionStorage _sessionStorage *@
 @inject NavigationManager NavigationManager
 
 
@@ -34,8 +34,9 @@
 
     public void GetDocString()
     {
-        string dummyDocString = File.ReadAllText("wwwroot\\text 1.html");
-        StateContainer.ApsimDocString = dummyDocString;
+        @* TODO: Replace hard coded ApsimX assembly reference.  *@
+        string docString = APSIM.Documentation.WebDocs.GetPage("C:/Users/RIC394/source/repos/ApsimX", DocModelName);
+        StateContainer.ApsimDocString = docString;
     }
 
     
