@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Mvc
 @using APSIM.Documentation.Models
+@using System
 @inject StateContainer StateContainer
 @inject NavigationManager NavigationManager
 
@@ -13,7 +14,7 @@
         <NavLink class="nav-link" href="@DocLinkHref">
             <img class="d-block mx-auto" src="Wheat.svg" alt="wheat image" width="25"/>
             <div class="card-body">
-                <h5 class="card-title text-success">@DocModelName</h5>
+                <h5 class="card-title text-success">@DocDisplayName</h5>
                 <h6 class="class-subtitle text-black"> 
                     @DocDescript
                 </h6>
@@ -23,6 +24,9 @@
 </div>
 
 @code{
+    [Parameter]
+    public string? DocDisplayName {get;set;}
+
     [Parameter]
     public string? DocModelName {get; set;}
 
@@ -35,13 +39,16 @@
     public void GetDocString()
     {
         @* TODO: Replace hard coded ApsimX assembly reference.  *@
-        string docString = APSIM.Documentation.WebDocs.GetPage("C:/Users/RIC394/source/repos/ApsimX", DocModelName);
+        string docString;
+        if (OperatingSystem.IsWindows())
+        {
+            docString = APSIM.Documentation.WebDocs.GetPage("C:/Users/RIC394/source/repos/ApsimX", DocModelName);
+        }
+        else
+        {
+            docString = APSIM.Documentation.WebDocs.GetPage("/Apsimx", DocModelName);
+        }
         StateContainer.ApsimDocString = docString;
     }
-
-    
-
-
-
-
 } 
+
