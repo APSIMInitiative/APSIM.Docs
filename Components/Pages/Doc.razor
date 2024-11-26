@@ -4,6 +4,7 @@
 @using APSIM.Docs.Components.State
 @inject StateContainer StateContainer
 @rendermode InteractiveServer
+@inject NavigationManager NavigationManager
 
 @page "/doc/{filename}"
 
@@ -85,7 +86,9 @@ else
     {
         if (StateContainer.ApsimDocString != null)
         {
-            MarkupString markupDocString = new(StateContainer.ApsimDocString);
+            string initialApsimDocString = StateContainer.ApsimDocString;
+            string linkModifiedApsimDocString = initialApsimDocString.Replace("href=\"#",$"href=\"{NavigationManager.Uri}#");
+            MarkupString markupDocString = new(linkModifiedApsimDocString);
             docString = markupDocString;
         }
     }

@@ -8,6 +8,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
     
 builder.Services.AddScoped<StateContainer>();
+builder.Services.AddBlazorBootstrap();
 
 
 var app = builder.Build();
