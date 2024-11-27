@@ -10,11 +10,12 @@ RUN git clone https://github.com/APSIMInitiative/ApsimX.git
 
 COPY . /apsimdocs
 WORKDIR /apsimdocs
-# RUN dotnet publish APSIM.Docs.csproj -a amd64 --output ../app
-RUN dotnet publish APSIM.Docs.csproj -a amd64 -c Release -o ../app
+RUN dotnet publish APSIM.Docs.csproj -a amd64 -c Debug -o ../app
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-noble
+RUN apt -yq update 
+RUN apt -yq install libsqlite3-dev
 EXPOSE 8080
 # WORKDIR /app
 WORKDIR /
@@ -22,5 +23,4 @@ COPY --link --from=build /app /app
 COPY --link --from=build /ApsimX /ApsimX
 
 WORKDIR /app
-USER $APP_UID
 ENTRYPOINT ["dotnet","APSIM.Docs.dll"]
