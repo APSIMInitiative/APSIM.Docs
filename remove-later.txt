@@ -1,3 +1,3 @@
 This is used for a PR to trigger first github workflow for APSIM.Docs.
 
-attempts: 2
+attempts: 3
