@@ -1,2 +1,3 @@
-docker build -t apsim-docs
-docker run -p 8000:8080 -e ASPNETCORE_HTTP_PORTS=8080 apsim-docs
+docker build -t apsimdocs .
+docker rm apsimdocs
+docker run -p 8080:8080 -e ASPNETCORE_HTTP_PORTS=8080 --name apsimdocs apsimdocs

@@ -48,7 +48,7 @@ else
 
     protected override void OnInitialized()
     {
-        MarkupString markupDocString = new(File.ReadAllText("wwwroot\\docs.css"));
+        MarkupString markupDocString = new(File.ReadAllText($"wwwroot{Path.DirectorySeparatorChar}docs.css"));
         cssString = markupDocString;
     }
 

@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Mvc
 @using APSIM.Docs.Components.State
 @inject StateContainer StateContainer
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 @page "/tutorial/{filename}"
@@ -47,7 +48,7 @@ else
 
     protected override void OnInitialized()
     {
-        MarkupString markupDocString = new(File.ReadAllText("wwwroot\\docs.css"));
+        MarkupString markupDocString = new(File.ReadAllText($"wwwroot{Path.DirectorySeparatorChar}docs.css"));
         cssString = markupDocString;
     }
 
@@ -85,7 +86,9 @@ else
     {
         if (StateContainer.ApsimDocString != null)
         {
-            MarkupString markupDocString = new(StateContainer.ApsimDocString);
+            string initialApsimDocString = StateContainer.ApsimDocString;
+            string linkModifiedApsimDocString = initialApsimDocString.Replace("href=\"#",$"href=\"{NavigationManager.Uri}#");
+            MarkupString markupDocString = new(linkModifiedApsimDocString);
             docString = markupDocString;
         }
     }

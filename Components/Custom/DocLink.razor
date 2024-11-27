@@ -42,11 +42,11 @@
         string docString;
         if (OperatingSystem.IsWindows())
         {
-            docString = APSIM.Documentation.WebDocs.GetPage("C:/Users/RIC394/source/repos/ApsimX", DocModelName);
+            docString = APSIM.Documentation.WebDocs.GetPage($"{Directory.GetCurrentDirectory()}/../ApsimX", DocModelName);
         }
         else
         {
-            docString = APSIM.Documentation.WebDocs.GetPage("/Apsimx", DocModelName);
+            docString = APSIM.Documentation.WebDocs.GetPage("/ApsimX", DocModelName);
         }
         StateContainer.ApsimDocString = docString;
     }
