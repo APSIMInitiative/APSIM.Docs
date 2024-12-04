@@ -1,0 +1,17 @@
+services:
+  apsim-docs:
+    image: apsiminitiative/apsim-docs:latest
+    pull_policy: always
+    container_name: apsim-docs
+    restart: unless-stopped
+    networks:
+      - apsim
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+networks:
+  apsim:
+    external: true
