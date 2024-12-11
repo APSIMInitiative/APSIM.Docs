@@ -39,16 +39,9 @@
     public void GetDocString()
     {
         @* TODO: Replace hard coded ApsimX assembly reference.  *@
-        string docString;
-        if (OperatingSystem.IsWindows())
-        {
-            docString = APSIM.Documentation.WebDocs.GetPage($"{Directory.GetCurrentDirectory()}/../ApsimX", DocModelName);
-        }
-        else
-        {
-            docString = APSIM.Documentation.WebDocs.GetPage("/ApsimX", DocModelName);
-        }
+        using StreamReader reader = new("./" + DocModelName + ".html");
+        string docString = reader.ReadToEnd();
         StateContainer.ApsimDocString = docString;
-    }
+    } 
 } 
 
