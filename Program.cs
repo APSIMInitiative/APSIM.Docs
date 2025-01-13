@@ -4,8 +4,13 @@ using APSIM.Docs.Components.State;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+builder.Services.AddRazorComponents().AddInteractiveServerComponents()
+    .AddHubOptions(options =>
+{
+    // These settings prevent "Attempting to reconnect to server..." modal messages from popping up.
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(60);
+    options.HandshakeTimeout = TimeSpan.FromSeconds(30);
+});
     
 builder.Services.AddScoped<StateContainer>();
 builder.Services.AddBlazorBootstrap();
