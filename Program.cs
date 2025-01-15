@@ -8,7 +8,7 @@ builder.Services.AddRazorComponents().AddInteractiveServerComponents()
     .AddHubOptions(options =>
 {
     // These settings prevent "Attempting to reconnect to server..." modal messages from popping up.
-    options.ClientTimeoutInterval = TimeSpan.FromSeconds(90);
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(120);
     options.HandshakeTimeout = TimeSpan.FromSeconds(60);
 });
     
