@@ -10,7 +10,7 @@
 @namespace Components.Custom
 
 <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12  g-2">
-    <div class="card card-hover-shadow" @onclick="GetDocString">
+    <div class="card card-hover-shadow">
         <NavLink class="nav-link" href="@DocLinkHref">
             <img class="d-block mx-auto" src="Wheat.svg" alt="wheat image" width="25"/>
             <div class="card-body">
@@ -36,12 +36,5 @@
     [Parameter]
     public string? DocLinkHref {get; set;}
 
-    public void GetDocString()
-    {
-        @* TODO: Replace hard coded ApsimX assembly reference.  *@
-        using StreamReader reader = new("./" + DocModelName + ".html");
-        string docString = reader.ReadToEnd();
-        StateContainer.ApsimDocString = docString;
-    } 
 } 
 
