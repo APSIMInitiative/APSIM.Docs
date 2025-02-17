@@ -84,13 +84,30 @@ else
 
     private void GetApsimDocString()
     {
-        if (StateContainer.ApsimDocString != null)
+        MarkupString markupDocString;
+        string initialApsimDocString = "";
+
+        // Get the html doc string from the local file system.
+        string currentDir = Directory.GetCurrentDirectory();
+        string apsimxFile = Path.Combine(currentDir,filename!+".html");
+        if (File.Exists(Path.Combine(apsimxFile)))
         {
-            string initialApsimDocString = StateContainer.ApsimDocString;
+            initialApsimDocString = File.ReadAllText(apsimxFile);
             string linkModifiedApsimDocString = initialApsimDocString.Replace("href=\"#",$"href=\"{NavigationManager.Uri}#");
-            MarkupString markupDocString = new(linkModifiedApsimDocString);
+            markupDocString = new(linkModifiedApsimDocString);
             docString = markupDocString;
         }
+        else
+        {
+            markupDocString = new(
+                "<div class=\"container\">"+
+                "<div class=\"row\"><span class=\"col\">The document you selected is currently unavailable. Please submit an issue.</span></div>" +
+                "<div class=\"row\"><span class=\"col\"><a target=\"_blank\" href=\"https://github.com/APSIMInitiative/APSIM.Docs/issues\">APSIM.Docs issues</a></span></div>"+
+                "</div>"
+            );
+            docString = markupDocString;
+        }
+
     }
 
 }
