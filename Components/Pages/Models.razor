@@ -1,0 +1,113 @@
+@using APSIM.Documentation
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Mvc
+@using APSIM.Docs.Components.State
+@inject StateContainer StateContainer
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+@page "/model/{filename}"
+
+<PageTitle>@Filename documentation</PageTitle>
+
+<HeadContent>
+    <style id="style">
+        @GetCssString()
+    </style>
+</HeadContent>
+
+@if (IsLoading)
+{
+    <div class="text-center text-success">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading</span>
+        </div>
+    </div>
+}
+else
+{
+    @GetDocString();
+}
+
+@code{
+    private string? filename;
+
+    private bool IsLoading {get;set;} = true;
+
+    private MarkupString? cssString;
+
+    [Parameter]
+    public MarkupString? docString { get; set; }
+
+    [Parameter]
+    public string? Filename
+    {
+        get { return filename; }
+        set { filename = value; }
+    }
+
+    protected override void OnInitialized()
+    {
+        MarkupString markupDocString = new(File.ReadAllText($"wwwroot{Path.DirectorySeparatorChar}docs.css"));
+        cssString = markupDocString;
+    }
+
+    protected override void OnAfterRender(bool firstRenderer)
+    {
+        if (firstRenderer == true)
+        {
+            GetApsimDocString();
+            IsLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    public RenderFragment GetDocString()
+    {
+        RenderFragment renderFragment = @<div>@docString</div>;
+        return renderFragment;
+    }
+
+    private void SetCSS()
+    {
+        if (StateContainer.CssString != null)
+        { 
+            MarkupString markupDocString = new(StateContainer.CssString);
+            cssString = markupDocString;
+        }        
+    }
+
+    public MarkupString? GetCssString()
+    {
+        return cssString;
+    }
+
+    private void GetApsimDocString()
+    {
+        MarkupString markupDocString;
+        string initialApsimDocString = "";
+
+        // Get the html doc string from the local file system.
+        string currentDir = Directory.GetCurrentDirectory();
+        string apsimxFile = Path.Combine(currentDir,filename!+".html");
+        if (File.Exists(Path.Combine(apsimxFile)))
+        {
+            initialApsimDocString = File.ReadAllText(apsimxFile);
+            string linkModifiedApsimDocString = initialApsimDocString.Replace("href=\"#",$"href=\"{NavigationManager.Uri}#");
+            markupDocString = new(linkModifiedApsimDocString);
+            docString = markupDocString;
+        }
+        else
+        {
+            markupDocString = new(
+                "<div class=\"container\">"+
+                "<div class=\"row\"><span class=\"col\">The document you selected is currently unavailable. Please submit an issue.</span></div>" +
+                "<div class=\"row\"><span class=\"col\"><a target=\"_blank\" href=\"https://github.com/APSIMInitiative/APSIM.Docs/issues\">APSIM.Docs issues</a></span></div>"+
+                "</div>"
+            );
+            docString = markupDocString;
+        }
+
+    }
+
+}

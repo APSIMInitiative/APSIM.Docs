@@ -10,4 +10,9 @@ Local development can be conducted if you have the ApsimX repository as a 'sibli
 NET8.0 is required to run the app locally.
 
 ### Running the container
-Use the deploy script to build and run the container. Once running the container can be viewed at http://localhost:8080/
+
+Use the deploy script to build and run the container. Once running the container can be viewed at [http://localhost:8080/](http://localhost:8080/)
+
+### Adding a new doc
+
+In `Program.cs` add the required model type to the `modelsToDocument` list. Next create a new DocLink for the model with the required data.
