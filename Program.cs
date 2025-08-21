@@ -38,7 +38,7 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 //On startup, make doc files one at a time as to not kill server
-List<string> validationFileNames = ["AgPasture", "Barley", "Canola", "Chicory", "Chickpea", "Clock", "SorghumDCaPST", "Eucalyptus", "FodderBeet", "Gliricidia", "Maize", "MicroClimate", "Mungbean", "Nutrient", "Oats", "OilPalm", "Peanut", "Pinus", "PlantainForage", "Potato", "RedClover", "SCRUM", "Slurp", "SoilArbitrator", "SoilTemperature", "Sorghum", "Soybean", "Sugarcane", "Stock", "SWIM", "Wheat", "WhiteClover", "ClimateController", "Lifecycle", "Manager", "Sensitivity_MorrisMethod", "Sensitivity_SobolMethod", "Sensitivity_FactorialANOVA", "PredictedObserved", "Report", "CLEM_Example_Cropping", "CLEM_Example_Grazing"];
+List<string> validationFileNames = ["AgPasture", "Barley", "Canola", "Chicory", "Chickpea", "Clock", "SorghumDCaPST", "Eucalyptus", "FodderBeet", "Gliricidia", "Maize", "MicroClimate", "Mungbean", "Nutrient", "Oats", "OilPalm", "Peanut", "Pinus", "PlantainForage", "Potato", "RedClover", "SCRUM", "STRUP", "SPRUM", "Slurp", "SoilArbitrator", "SoilTemperature", "Sorghum", "Soybean", "Sugarcane", "Stock", "SWIM", "Wheat", "WhiteClover", "ClimateController", "Lifecycle", "Manager", "Sensitivity_MorrisMethod", "Sensitivity_SobolMethod", "Sensitivity_FactorialANOVA", "PredictedObserved", "Report", "CLEM_Example_Cropping", "CLEM_Example_Grazing"];
 List<IModel> modelsToDocument = new(){new Clock(), new ZadokPMFWheat()};
 
 DocumentationUtility.CreateHTMLForValidations(validationFileNames);
