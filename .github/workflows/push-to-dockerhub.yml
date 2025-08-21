@@ -15,11 +15,11 @@ on:
       - closed
   workflow_dispatch:
   schedule:
-    - cron: '0 3 * * *'
+    - cron: '0 13 * * *'
 
 jobs:
-  if_merged:
-    if: github.event.pull_request.merged == true
+  apsim_docs_build_push:
+    if: github.event.pull_request.merged == true || github.event_name == 'schedule'
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
