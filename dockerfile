@@ -7,17 +7,21 @@ RUN echo ${TARGETARCH}
 # Get ApsimX dependencies.
 WORKDIR /
 RUN git clone https://github.com/APSIMInitiative/ApsimX.git
+WORKDIR /ApsimX
+RUN dotnet build
 
 COPY . /apsimdocs
 WORKDIR /apsimdocs
 RUN dotnet publish APSIM.Docs.csproj -a amd64 -c Debug -o ../app
 
 # Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-noble
-RUN apt -yq update 
-RUN apt -yq install libsqlite3-dev
+# FROM mcr.microsoft.com/dotnet/aspnet:8.0-noble
+FROM apsiminitiative/rsensitivity 
+RUN apt -yq update && \
+ apt install -y aspnetcore-runtime-8.0 && \
+ apt install -y dotnet-runtime-8.0
+
 EXPOSE 8080
-# WORKDIR /app
 WORKDIR /
 COPY --link --from=build /app /app
 COPY --link --from=build /ApsimX /ApsimX
