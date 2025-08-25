@@ -19,7 +19,7 @@ on:
 
 jobs:
   apsim_docs_build_push:
-    if: github.event.pull_request.merged == true || github.event_name == 'schedule'
+    if: github.repository == 'APSIMInitiative/APSIM.Docs' && (github.event.pull_request.merged == true || github.event_name == 'schedule')
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo

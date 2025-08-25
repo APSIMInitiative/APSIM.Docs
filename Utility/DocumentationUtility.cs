@@ -1,3 +1,4 @@
+using APSIM.Core;
 using Models.Core;
 
 namespace APSIM.Docs.Utility;
@@ -29,9 +30,9 @@ public static class DocumentationUtility
                 }
                 Console.WriteLine($"Documentation generated for {name}");
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine($"Documentation failed for {name}");
+                Console.WriteLine($"Documentation failed for {name}: {ex.ToString()}");
             }
 
         }
@@ -48,6 +49,7 @@ public static class DocumentationUtility
         {
             try
             {
+                Node.Create((INodeModel)model);
                 string docString = APSIM.Documentation.WebDocs.GenerateWeb(model);
                 using (StreamWriter outputFile = new StreamWriter(Path.Combine("./", model.Name + ".html")))
                 {
