@@ -1,7 +1,7 @@
 services:
   apsim-docs:
-    image: apsiminitiative/apsim-docs:latest
-    pull_policy: always
+    image: apsimdocs
+    # pull_policy: always
     container_name: apsim-docs
     restart: unless-stopped
     networks:
@@ -12,6 +12,8 @@ services:
       resources:
         limits:
           cpus: "0.5"
+    volumes:
+      - /data/apsim-docs/:/app/apsim-docs-html
 networks:
   apsim:
-    external: true
+    external: false
