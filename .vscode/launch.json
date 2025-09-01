@@ -10,7 +10,5 @@
             "request": "launch",
             "projectPath": "${workspaceFolder}/APSIM.Docs.csproj",
         }
-
-
     ]
 }
