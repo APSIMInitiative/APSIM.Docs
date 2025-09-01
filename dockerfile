@@ -7,6 +7,7 @@ RUN echo ${TARGETARCH}
 # Get ApsimX dependencies.
 WORKDIR /
 RUN git clone https://github.com/APSIMInitiative/ApsimX.git
+# COPY ../ApsimX /ApsimX
 WORKDIR /ApsimX
 RUN dotnet build
 
