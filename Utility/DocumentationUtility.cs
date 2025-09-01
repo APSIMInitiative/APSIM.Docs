@@ -24,7 +24,11 @@ public static class DocumentationUtility
                 {
                     docString = APSIM.Documentation.WebDocs.GetPage("/ApsimX", name);
                 }
-                using (StreamWriter outputFile = new StreamWriter(Path.Combine("./", name + ".html")))
+                
+                if (Directory.Exists("./apsim-docs-html") == false)
+                    Directory.CreateDirectory("./apsim-docs-html");
+
+                using (StreamWriter outputFile = new StreamWriter(Path.Combine("./apsim-docs-html", name + ".html")))
                 {
                     outputFile.Write(docString);
                 }
@@ -51,7 +55,9 @@ public static class DocumentationUtility
             {
                 Node.Create((INodeModel)model);
                 string docString = APSIM.Documentation.WebDocs.GenerateWeb(model);
-                using (StreamWriter outputFile = new StreamWriter(Path.Combine("./", model.Name + ".html")))
+                if (Directory.Exists("./apsim-docs-html") == false)
+                    Directory.CreateDirectory("./apsim-docs-html");
+                using (StreamWriter outputFile = new StreamWriter(Path.Combine("./apsim-docs-html", model.Name + ".html")))
                 {
                     outputFile.Write(docString);
                 }
