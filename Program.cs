@@ -40,7 +40,7 @@ app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 // Check if the time is between 17:00 and 18:00 UTC
 // If it is then generate all the docs
-if (DateTime.UtcNow.Hour == 17)
+if (DateTime.UtcNow.Hour == 17 || Environment.GetEnvironmentVariable("APSIM_DOC_GENERATE_DOCS") == "true")
 {
     Console.WriteLine($"Starting documentation generation at {DateTime.UtcNow} UTC");
     //On startup, make doc files one at a time as to not kill server
