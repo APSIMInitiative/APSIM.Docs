@@ -86,10 +86,11 @@ else
     {
         MarkupString markupDocString;
         string initialApsimDocString = "";
+        string docHtmlDirName = "/apsim-docs-html/";
 
         // Get the html doc string from the local file system.
         string currentDir = Directory.GetCurrentDirectory();
-        string apsimxFile = Path.Combine(currentDir,filename!+".html");
+        string apsimxFile = Path.Combine(currentDir + docHtmlDirName,filename!+".html");
         if (File.Exists(Path.Combine(apsimxFile)))
         {
             initialApsimDocString = File.ReadAllText(apsimxFile);
