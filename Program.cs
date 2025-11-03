@@ -1,9 +1,5 @@
 using APSIM.Docs.Components;
 using APSIM.Docs.Components.State;
-using APSIM.Docs.Utility;
-using Models.Core;
-using Models;
-using Models.PMF.Phen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,24 +32,6 @@ app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
-
-
-// Check if the time is between 17:00 and 18:00 UTC
-// If it is then generate all the docs
-if (DateTime.UtcNow.Hour == 17 || Environment.GetEnvironmentVariable("APSIM_DOC_GENERATE_DOCS") == "true")
-{
-    Console.WriteLine($"Starting documentation generation at {DateTime.UtcNow} UTC");
-    //On startup, make doc files one at a time as to not kill server
-    List<string> validationFileNames = ["AgPasture", "Barley", "Canola", "Chicory", "Chickpea", "Clock", "SorghumDCaPST", "Eucalyptus", "FodderBeet", "Gliricidia", "Maize", "MicroClimate", "Mungbean", "Nutrient", "Oats", "OilPalm", "Peanut", "Pinus", "PlantainForage", "Potato", "RedClover", "SCRUM", "STRUM", "SPRUM", "Slurp", "SoilArbitrator", "SoilTemperature", "Sorghum", "Soybean", "Sugarcane", "Stock", "SWIM", "Wheat", "WhiteClover", "ClimateController", "Lifecycle", "Manager", "Sensitivity_MorrisMethod", "Sensitivity_SobolMethod", "Sensitivity_FactorialANOVA", "PredictedObserved", "Report", "CLEM_Example_Cropping", "CLEM_Example_Grazing"];
-
-    List<IModel> modelsToDocument = new() { new Clock(), new ZadokPMFWheat() };
-
-    DocumentationUtility.CreateHTMLForValidations(validationFileNames);
-
-    DocumentationUtility.CreateHTMLForModelTypes(modelsToDocument);
-
-    Console.WriteLine($"Documentation generation complete.");
-}
 
 app.Run();
 
