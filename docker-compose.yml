@@ -8,10 +8,6 @@ services:
       - apsim
     ports:
       - "8080:8080"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"
     volumes:
       - /data/apsim-docs/:/app/apsim-docs-html
 networks:

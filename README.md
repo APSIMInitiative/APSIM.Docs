@@ -15,4 +15,6 @@ Use the deploy script to build and run the container. Once running the container
 
 ### Adding a new doc
 
-In `Program.cs` add the required model type to the `modelsToDocument` list. Next create a new DocLink for the model with the required data.
+1. In `Program.cs` add the required model type to the `modelsToDocument` list.
+
+2. Next create a new DocLink for the model with the required data in `Components/Layout/ValidationLinks.razor`. Just follow the pattern in the file. Models are sorted alphabetically.
