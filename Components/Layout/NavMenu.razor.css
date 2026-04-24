@@ -3,21 +3,22 @@
     cursor: pointer;
     width: 3.5rem;
     height: 2.5rem;
-    color: white;
+    color: rgb(255, 255, 255);
     position: absolute;
     top: 0.5rem;
     right: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") no-repeat center/1.75rem rgba(255, 255, 255, 0.1);
+    border: 1px solid rgb(255, 255, 255);
+    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") no-repeat center/1.75rem rgb(0, 78, 19);
 }
 
 .navbar-toggler:checked {
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgb(137, 137, 137);
+    color:aqua;
 }
 
 .top-row {
-    height: 3.5rem;
-    background-color: rgba(0,0,0,0.4);
+    height: 8.5rem;
+    background-color: rgb(255, 255, 255);
 }
 
 .navbar-brand {
@@ -60,7 +61,7 @@
     }
 
     .nav-item ::deep .nav-link {
-        color: #d7d7d7;
+        color: #ffffff;
         background: none;
         border: none;
         border-radius: 4px;

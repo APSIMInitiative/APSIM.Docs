@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "C#: APSIM.Docs Debug",
+            "name": "Debug: APSIM.Docs",
             "type": "dotnet",
             "request": "launch",
             "projectPath": "${workspaceFolder}/APSIM.Docs.csproj",
-        }
+        },
     ]
 }

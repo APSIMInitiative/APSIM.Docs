@@ -1,5 +1,6 @@
 html, body {
     font-family: 'Montserrat', Arial, sans-serif;
+    background-color: #f4f4f4;
 }
 
 a, .btn-link {
@@ -22,6 +23,10 @@ a, .btn-link {
 
 h1:focus {
     outline: none;
+}
+
+.page-heading {
+    text-align: center;
 }
 
 .valid.modified:not([type=checkbox]) {

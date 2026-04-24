@@ -6,6 +6,35 @@
 
 main {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+article {
+    flex: 1;
+}
+
+.footer {
+    background-color: #f7f7f7;
+    border-top: 1px solid #d6d5d5;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.footer a {
+    color: #006bb7;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.footer-separator {
+    margin: 0 0.5rem;
+    color: #888;
 }
 
 .sidebar {

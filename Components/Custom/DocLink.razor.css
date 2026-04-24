@@ -4,4 +4,16 @@
 
 .card-hover-shadow{
     border: 2px white solid;
+    min-height: 220px;
+}
+
+.nav-link {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.card-body {
+    flex: 1;
 }
