@@ -1,0 +1,91 @@
+@using APSIM.Docs.Components.Layout
+@using APSIM.Docs.Services
+@inject IHtmlDocsService HtmlDocsService
+@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+@page "/html/{SectionSlug}"
+@page "/html/{SectionSlug}/{Filename}"
+
+<PageTitle>@pageTitle</PageTitle>
+
+<HeadContent>
+    <style id="style">
+        @cssString
+    </style>
+</HeadContent>
+
+<h1 class="page-heading">@heading</h1>
+
+@if (IsNotFound)
+{
+    <div class="container">
+        <div class="row"><span class="col">The document you selected is currently unavailable. Please submit an issue.</span></div>
+        <div class="row"><span class="col"><a target="_blank" href="https://github.com/APSIMInitiative/APSIM.Docs/issues">APSIM.Docs issues</a></span></div>
+    </div>
+}
+else if (currentPage is not null)
+{
+    <div>@docString</div>
+}
+else
+{
+    <HtmlSectionLinks SectionSlug="@SectionSlug" />
+}
+
+@code {
+    private string pageTitle = "APSIM Docs";
+    private string heading = "HTML Documentation";
+    private MarkupString docString;
+    private MarkupString cssString;
+    private HtmlDocSection? currentSection;
+    private HtmlDocPage? currentPage;
+
+    [Parameter]
+    public string? SectionSlug { get; set; }
+
+    [Parameter]
+    public string? Filename { get; set; }
+
+    private bool IsNotFound { get; set; }
+
+    protected override void OnInitialized()
+    {
+        cssString = new MarkupString(File.ReadAllText($"wwwroot{Path.DirectorySeparatorChar}docs.css"));
+    }
+
+    protected override void OnParametersSet()
+    {
+        IsNotFound = false;
+        currentPage = null;
+        currentSection = HtmlDocsService.TryGetSection(SectionSlug);
+
+        if (currentSection is null)
+        {
+            IsNotFound = true;
+            pageTitle = "APSIM Docs - Not Found";
+            heading = "HTML Documentation";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(Filename))
+        {
+            heading = currentSection.Name;
+            pageTitle = $"APSIM Docs - {currentSection.Name}";
+            return;
+        }
+
+        currentPage = HtmlDocsService.TryGetPage(SectionSlug, Filename);
+        if (currentPage is null)
+        {
+            IsNotFound = true;
+            pageTitle = "APSIM Docs - Not Found";
+            heading = currentSection.Name;
+            return;
+        }
+
+        heading = currentPage.DisplayName;
+        pageTitle = $"APSIM Docs - {currentPage.DisplayName}";
+        docString = new MarkupString(HtmlDocsService.RenderPageHtml(currentPage, NavigationManager.Uri));
+    }
+}

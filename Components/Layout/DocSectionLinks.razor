@@ -1,0 +1,75 @@
+@using APSIM.Docs.Components.Custom
+@using APSIM.Docs.Services
+@inject IDocsService DocsService
+
+@namespace APSIM.Docs.Components.Layout
+
+@if (entries.Count == 0)
+{
+    <p>No documentation entries were found in this section.</p>
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            @foreach (var entry in entries)
+            {
+                <DocLink
+                    DocDisplayName="@entry.Title"
+                    DocModelName="@entry.Title"
+                    DocDescript="@entry.Description"
+                    DocLinkHref="@entry.Href" />
+            }
+        </div>
+    </div>
+}
+
+@code {
+    private readonly List<SectionLinkEntry> entries = [];
+
+    [Parameter]
+    public string? SectionSlug { get; set; }
+
+    [Parameter]
+    public bool IncludeIndexPage { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        entries.Clear();
+
+        var sectionNode = string.IsNullOrWhiteSpace(SectionSlug)
+            ? DocsService.GetTree()
+            : DocsService.TryGetDirectory(SectionSlug);
+
+        if (sectionNode is null)
+        {
+            return;
+        }
+
+        if (IncludeIndexPage && sectionNode.IndexPage is not null)
+        {
+            entries.Add(new SectionLinkEntry(
+                sectionNode.IndexPage.Title,
+                "Overview for this section.",
+                $"/docs/{sectionNode.IndexPage.SlugPath}"));
+        }
+
+        foreach (var childDirectory in sectionNode.Directories.OrderBy(directory => directory.Name, StringComparer.OrdinalIgnoreCase))
+        {
+            entries.Add(new SectionLinkEntry(
+                childDirectory.Name,
+                "Open section.",
+                $"/docs/{childDirectory.SlugPath}"));
+        }
+
+        foreach (var page in sectionNode.Pages.OrderBy(page => page.Title, StringComparer.OrdinalIgnoreCase))
+        {
+            entries.Add(new SectionLinkEntry(
+                page.Title,
+                page.Summary ?? "Open documentation page.",
+                $"/docs/{page.SlugPath}"));
+        }
+    }
+
+    private sealed record SectionLinkEntry(string Title, string Description, string Href);
+}

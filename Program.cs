@@ -1,5 +1,6 @@
 using APSIM.Docs.Components;
 using APSIM.Docs.Components.State;
+using APSIM.Docs.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ builder.Services.AddRazorComponents().AddInteractiveServerComponents()
 });
     
 builder.Services.AddScoped<StateContainer>();
+builder.Services.AddSingleton<IDocsService, DocsService>();
+builder.Services.AddSingleton<IHtmlDocsService, HtmlDocsService>();
 builder.Services.AddBlazorBootstrap();
 
 

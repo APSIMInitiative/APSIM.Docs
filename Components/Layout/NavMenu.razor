@@ -1,4 +1,8 @@
-﻿<div class="top-row ps-3 mb-5 navbar navbar-dark">
+﻿@using APSIM.Docs.Services
+@inject IHtmlDocsService HtmlDocsService
+@inject IDocsService DocsService
+
+<div class="top-row ps-3 mb-5 navbar navbar-dark">
     <div class="container-fluid">      
         <a class="navbar-brand" href="/">
             <img src="APSIM_transparent-154x100.png" />
@@ -10,31 +14,54 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="" aria-hidden="true">
-                    <Icon Name="IconName.ClipboardCheckFill" Size="IconSize.x2" class="me-3 ms-1"></Icon>
-                </span> Validation
-            </NavLink>
-        </div>
+        <div class="nav-item px-3 text-white-50 small mt-2">HTML Docs</div>
+        @foreach (var item in HtmlMenuItems)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="@item.Href" Match="NavLinkMatch.Prefix">
+                    <span class="" aria-hidden="true">
+                        <Icon Name="@item.IconName" Size="IconSize.x2" class="me-3 ms-1"></Icon>
+                    </span> @item.Title
+                </NavLink>
+            </div>
+        }
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="tutorials">
-                <span class="" aria-hidden="true">
-                    <Icon Name="IconName.BookFill" Size="IconSize.x2"class="me-3 ms-1"></Icon>
-                </span> Tutorials
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="models">
-                <span class="" aria-hidden="true">
-                    <Icon Name="IconName.FileCodeFill" Size="IconSize.x2" class="me-3 ms-1"></Icon>
-                </span> Models
-            </NavLink>
-        </div>
+        <div class="nav-item px-3 text-white-50 small mt-3">Markdown Docs</div>
+        @foreach (var item in MarkdownMenuItems)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="@item.Href" Match="NavLinkMatch.Prefix">
+                    <span class="" aria-hidden="true">
+                        <Icon Name="@item.IconName" Size="IconSize.x2" class="me-3 ms-1"></Icon>
+                    </span> @item.Title
+                </NavLink>
+            </div>
+        }
     </nav>
 </div>
+
+@code {
+    private IEnumerable<NavMenuItem> HtmlMenuItems => HtmlDocsService
+        .GetSections()
+        .Select(section => new NavMenuItem(section.Name, GetHtmlSectionHref(section.Slug), IconName.FileCodeFill));
+
+    private IEnumerable<NavMenuItem> MarkdownMenuItems => DocsService
+        .GetTopLevelSections()
+        .Select(section => new NavMenuItem(section.Name, $"/docs/{section.SlugPath}", IconName.JournalText));
+
+    private static string GetHtmlSectionHref(string sectionSlug)
+    {
+        return sectionSlug switch
+        {
+            "models" => "/models",
+            "tutorials" => "/tutorials",
+            "validation" => "/validation",
+            _ => $"/html/{sectionSlug}"
+        };
+    }
+
+    private sealed record NavMenuItem(string Title, string Href, IconName IconName);
+}
 
 
 
