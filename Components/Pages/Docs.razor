@@ -1,0 +1,149 @@
+@using APSIM.Docs.Components.Custom
+@using APSIM.Docs.Services
+@using System.Text.RegularExpressions
+@inject IDocsService DocsService
+
+@rendermode InteractiveServer
+@page "/docs"
+@page "/docs/{*DocPath}"
+
+<PageTitle>@pageTitle</PageTitle>
+
+<HeadContent>
+    <style id="style">
+        @cssString
+    </style>
+</HeadContent>
+
+<h1 class="page-heading">@heading</h1>
+
+@if (IsNotFound)
+{
+    <div class="container">
+        <div class="row"><span class="col">The document you selected is currently unavailable. Please submit an issue.</span></div>
+        <div class="row"><span class="col"><a target="_blank" href="https://github.com/APSIMInitiative/APSIM.Docs/issues">APSIM.Docs issues</a></span></div>
+    </div>
+}
+else if (currentPage is not null)
+{
+    <div>@docString</div>
+
+    @if (ShowChildLinks)
+    {
+        <hr />
+        <h2 class="page-heading">In this section</h2>
+        <div class="container">
+            <div class="row">
+                @foreach (var childDirectory in currentDirectory!.Directories.OrderBy(directory => directory.Name, StringComparer.OrdinalIgnoreCase))
+                {
+                    <DocLink
+                        DocDisplayName="@childDirectory.Name"
+                        DocModelName="@childDirectory.Name"
+                        DocDescript="Click to see more"
+                        DocLinkHref="@($"/docs/{childDirectory.SlugPath}")" />
+                }
+
+                @foreach (var pageItem in currentDirectory.Pages.OrderBy(page => page.Title, StringComparer.OrdinalIgnoreCase))
+                {
+                    <DocLink
+                        DocDisplayName="@pageItem.Title"
+                        DocModelName="@pageItem.Title"
+                        DocDescript="@(pageItem.Summary ?? "Open documentation page.")"
+                        DocLinkHref="@($"/docs/{pageItem.SlugPath}")" />
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            @foreach (var childDirectory in currentDirectory!.Directories.OrderBy(directory => directory.Name, StringComparer.OrdinalIgnoreCase))
+            {
+                <DocLink
+                    DocDisplayName="@childDirectory.Name"
+                    DocModelName="@childDirectory.Name"
+                    DocDescript="Click to see more"
+                    DocLinkHref="@($"/docs/{childDirectory.SlugPath}")" />
+            }
+
+            @foreach (var pageItem in currentDirectory.Pages.OrderBy(page => page.Title, StringComparer.OrdinalIgnoreCase))
+            {
+                <DocLink
+                    DocDisplayName="@pageItem.Title"
+                    DocModelName="@pageItem.Title"
+                    DocDescript="@(pageItem.Summary ?? "Open documentation page.")"
+                    DocLinkHref="@($"/docs/{pageItem.SlugPath}")" />
+            }
+        </div>
+    </div>
+}
+
+@code {
+    private string pageTitle = "APSIM Docs";
+    private string heading = "Documentation";
+    private MarkupString docString;
+    private MarkupString cssString;
+    private DocsNode? currentDirectory;
+    private DocPage? currentPage;
+
+    [Parameter]
+    public string? DocPath { get; set; }
+
+    private bool IsNotFound { get; set; }
+
+    private bool ShowChildLinks => currentDirectory is not null
+        && (currentDirectory.Directories.Count > 0 || currentDirectory.Pages.Count > 0);
+
+    protected override void OnInitialized()
+    {
+        cssString = new MarkupString(File.ReadAllText($"wwwroot{Path.DirectorySeparatorChar}docs.css"));
+    }
+
+    protected override void OnParametersSet()
+    {
+        IsNotFound = false;
+        currentPage = null;
+        docString = default;
+
+        var normalizedPath = NormalizePath(DocPath);
+        currentDirectory = DocsService.TryGetDirectory(normalizedPath);
+
+        currentPage = DocsService.TryGetPageBySlug(normalizedPath) ?? currentDirectory?.IndexPage;
+        if (currentPage is not null)
+        {
+            docString = new MarkupString(DocsService.RenderPageHtml(currentPage));
+            heading = currentPage.Title;
+            pageTitle = $"APSIM Docs - {currentPage.Title}";
+            return;
+        }
+
+        if (currentDirectory is not null)
+        {
+            heading = string.IsNullOrWhiteSpace(currentDirectory.Name)
+                ? "Documentation"
+                : currentDirectory.Name;
+            pageTitle = $"APSIM Docs - {heading}";
+            return;
+        }
+
+        IsNotFound = true;
+        heading = "Documentation";
+        pageTitle = "APSIM Docs - Not Found";
+    }
+
+    private static string NormalizePath(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return string.Empty;
+        }
+
+        var segments = path
+            .Split('/', StringSplitOptions.RemoveEmptyEntries)
+            .Select(segment => Regex.Replace(segment.ToLowerInvariant(), "[^a-z0-9_-]+", "-").Trim('-'))
+            .Where(segment => !string.IsNullOrWhiteSpace(segment));
+        return string.Join('/', segments);
+    }
+}

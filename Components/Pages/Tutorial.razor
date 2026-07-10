@@ -1,112 +1,59 @@
-@using Microsoft.AspNetCore.Mvc
-@using APSIM.Docs.Components.State
-@inject StateContainer StateContainer
+@using APSIM.Docs.Services
+@inject IHtmlDocsService HtmlDocsService
 @inject NavigationManager NavigationManager
-@rendermode InteractiveServer
 
+@rendermode InteractiveServer
 @page "/tutorial/{filename}"
 
-<PageTitle>@Filename documentation</PageTitle>
+<PageTitle>@pageTitle</PageTitle>
 
 <HeadContent>
     <style id="style">
-        @GetCssString()
+        @cssString
     </style>
 </HeadContent>
 
-@if (IsLoading)
+@if (IsNotFound)
 {
-    <div class="text-center text-success">
-        <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading</span>
-        </div>
+    <h1 class="page-heading">Document not found</h1>
+    <div class="container">
+        <div class="row"><span class="col">The document you selected is currently unavailable. Please submit an issue.</span></div>
+        <div class="row"><span class="col"><a target="_blank" href="https://github.com/APSIMInitiative/APSIM.Docs/issues">APSIM.Docs issues</a></span></div>
     </div>
 }
 else
 {
-    @GetDocString();
+    <div>@docString</div>
 }
 
-@code{
-    private string? filename;
-
-    private bool IsLoading {get;set;} = true;
-
-    private MarkupString? cssString;
+@code {
+    private string pageTitle = "APSIM Docs";
+    private MarkupString docString;
+    private MarkupString cssString;
 
     [Parameter]
-    public MarkupString? docString { get; set; }
+    public string? Filename { get; set; }
 
-    [Parameter]
-    public string? Filename
-    {
-        get { return filename; }
-        set { filename = value; }
-    }
+    private bool IsNotFound { get; set; }
 
     protected override void OnInitialized()
     {
-        MarkupString markupDocString = new(File.ReadAllText($"wwwroot{Path.DirectorySeparatorChar}docs.css"));
-        cssString = markupDocString;
+        cssString = new MarkupString(File.ReadAllText($"wwwroot{Path.DirectorySeparatorChar}docs.css"));
     }
 
-    protected override void OnAfterRender(bool firstRenderer)
+    protected override void OnParametersSet()
     {
-        if (firstRenderer == true)
+        var page = HtmlDocsService.TryGetPage("tutorials", Filename);
+        if (page is null)
         {
-            GetApsimDocString();
-            IsLoading = false;
-            StateHasChanged();
-        }
-    }
-
-    public RenderFragment GetDocString()
-    {
-        RenderFragment renderFragment = @<div>@docString</div>;
-        return renderFragment;
-    }
-
-    private void SetCSS()
-    {
-        if (StateContainer.CssString != null)
-        {
-            MarkupString markupDocString = new(StateContainer.CssString);
-            cssString = markupDocString;
-        }        
-    }
-
-    public MarkupString? GetCssString()
-    {
-        return cssString;
-    }
-
-    private void GetApsimDocString()
-    {
-        MarkupString markupDocString;
-        string initialApsimDocString = "";
-        string docHtmlDirName = "/apsim-docs-html/";
-
-        // Get the html doc string from the local file system.
-        string currentDir = Directory.GetCurrentDirectory();
-        string apsimxFile = Path.Combine(currentDir + docHtmlDirName,filename!+".html");
-        if (File.Exists(Path.Combine(apsimxFile)))
-        {
-            initialApsimDocString = File.ReadAllText(apsimxFile);
-            string linkModifiedApsimDocString = initialApsimDocString.Replace("href=\"#",$"href=\"{NavigationManager.Uri}#");
-            markupDocString = new(linkModifiedApsimDocString);
-            docString = markupDocString;
-        }
-        else
-        {
-            markupDocString = new(
-                "<div class=\"container\">"+
-                "<div class=\"row\"><span class=\"col\">The document you selected is currently unavailable. Please submit an issue.</span></div>" +
-                "<div class=\"row\"><span class=\"col\"><a target=\"_blank\" href=\"https://github.com/APSIMInitiative/APSIM.Docs/issues\">APSIM.Docs issues</a></span></div>"+
-                "</div>"
-            );
-            docString = markupDocString;
+            IsNotFound = true;
+            pageTitle = "APSIM Docs - Not Found";
+            docString = default;
+            return;
         }
 
+        IsNotFound = false;
+        pageTitle = $"APSIM Docs - {page.DisplayName}";
+        docString = new MarkupString(HtmlDocsService.RenderPageHtml(page, NavigationManager.Uri));
     }
-
 }

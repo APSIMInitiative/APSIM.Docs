@@ -1,0 +1,50 @@
+@using APSIM.Docs.Components.Custom
+@using APSIM.Docs.Services
+@inject IHtmlDocsService HtmlDocsService
+
+@namespace APSIM.Docs.Components.Layout
+
+@if (section is null)
+{
+    <p>No documentation entries were found in this section.</p>
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            @foreach (var htmlPage in section.Pages)
+            {
+                <DocLink
+                    DocDisplayName="@htmlPage.DisplayName"
+                    DocModelName="@htmlPage.DisplayName"
+                    DocDescript="Open HTML documentation page."
+                    DocLinkHref="@BuildHref(htmlPage)" />
+            }
+        </div>
+    </div>
+}
+
+@code {
+    private HtmlDocSection? section;
+
+    [Parameter]
+    public string? SectionSlug { get; set; }
+
+    [Parameter]
+    public string? LinkBaseHref { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        section = HtmlDocsService.TryGetSection(SectionSlug);
+    }
+
+    private string BuildHref(HtmlDocPage page)
+    {
+        if (!string.IsNullOrWhiteSpace(LinkBaseHref))
+        {
+            return $"{LinkBaseHref!.TrimEnd('/')}/{page.FileStem}";
+        }
+
+        return $"/html/{page.SectionSlug}/{page.FileStem}";
+    }
+}
