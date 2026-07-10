@@ -74,12 +74,14 @@ public sealed class HtmlDocsService : IHtmlDocsService
         return LinkRegex.Replace(html, match =>
         {
             var href = match.Groups["href"].Value;
-            if (href.StartsWith("#", StringComparison.Ordinal))
+            if (!href.StartsWith("#", StringComparison.Ordinal))
             {
-                return $"href=\"{currentUri}{href}\"";
+                return match.Value;
             }
 
-            return match.Value;
+            var hashIndex = currentUri.IndexOf('#');
+            var baseUri = hashIndex >= 0 ? currentUri[..hashIndex] : currentUri;
+            return $"href=\"{baseUri}{href}\"";
         });
     }
 
