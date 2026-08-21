@@ -21,6 +21,11 @@
     width: 100%;
 }
 
+.docs-content img {
+    max-width: 100%;
+    height: auto;
+}
+
 .docs-table-container {
 	width: 100%;
 	overflow: auto;
