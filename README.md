@@ -24,7 +24,7 @@ This is a quick map of the most important files and folders for first-time devel
 
 ### Local Development
 
-- .NET 8.0 is required to run the app locally.
+- .NET 10.0 is required to run the app locally.
 - VS Code tasks are available in Terminal > Run Task...:
   - build: Compile the project.
   - run: Start the app once without file watching.
